@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, jsonify, request, redirect
 
 import dbInfo.db as db
 import dbInfo.studentInfo as stuInfo
@@ -18,7 +18,7 @@ db.init()
 
 @app.route('/')
 def hello_world():  # put application's code here
-    return render_template("hello.html")
+    return redirect("/login")
 
 
 @app.get('/test/table/demo1.json')
