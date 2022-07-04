@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>学生成绩管理系统-登录</title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link rel="stylesheet" href="../static/layui/css/layui.css" media="all">
+</head>
+<body>
+<script src="../static/layui/layui.js" charset="utf-8"></script>
+
+<div class="layui-form-item">
+    <div align="center">
+        <br><br><br>
+        <h2>学生成绩管理系统</h2>
+        <br><br>
+        <h1>登录</h1>
+        <hr/>
+    </div>
+
+    <form class="layui-form" action="" style="text-align: center">
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">账号</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="userid" name="userid" required lay-verify="required" placeholder="请输入账号"
+                           autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" id="password" name="password" required lay-verify="required"
+                           placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label">登录身份</label>
+                <div class="layui-input-inline">
+                    <select id="identity" name="identity" lay-verify="required">
+                        <option value=""></option>
+                        <option value="student">学生</option>
+                        <option value="teacher">教师</option>
+                        <option value="admin">管理员</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn" lay-submit lay-filter="formSave" onclick="log_in()">登录
+                    </button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    layui.use('form', function () {
+        var form = layui.form;
+        var $ = layui.$;
+
+        //监听提交
+        form.on('submit(formSave)', function (data) {
+            $.ajax({
+                url: "/login",  //提交请求的URL
+                type: "post",
+                data: data.field,    //提交的表单数据
+                success: function (result) {
+                    if (result.success) {
+                        layer.msg(result.msg, {icon: 1, time: 2000, title: '成功'})  //返回数据成功时弹框
+                        {#if (data.field["identity"] === "admin")#}
+
+
+                        localStorage.setItem("id", data.field["userid"])
+                        console.log(`${data.field["identity"]}_studentinfo.html`)
+                        window.location.href = `/${data.field["identity"]}/info/${data.field["userid"]}`
+                    } else {
+                        layer.msg(result.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
+                    }
+                },
+                error: function (result) {
+                    alert("接口错误"); //无返回或处理有报错时弹框
+                }
+            });
+            layer.msg(JSON.stringify(data.field));
+            return false;
+        });
+    });
+
+    //这里还需要加一个判断，账号密码正确才能跳转页面
+    function log_in() {
+        var userid = document.getElementById("userid");
+        var password = document.getElementById("password");
+        var identity = document.getElementById("identity");
+        // window.alert(identity.value);
+        if (userid.value == "") {
+            window.alert("请输入账号");
+        } else if (password.value == "") {
+            window.alert("请输入密码");
+        } else if (identity.value == "") {
+            window.alert("请选择身份");
+        } else {
+            if (identity.value == "student") {
+                {#window.location.href = 'student_studentinfo.html';#}
+
+            } else if (identity.value == "teacher") {
+                {#window.location.href = 'teacher_studentinfo.html';#}
+            } else if (identity.value == "admin") {
+                {#window.location.href = 'admin_studentinfo.html';#}
+            } else {
+                window.alert("ERROR");
+            }
+        }
+
+
+    }
+</script>
+
+</body>
+</html>

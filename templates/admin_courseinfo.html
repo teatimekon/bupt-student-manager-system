@@ -1,0 +1,271 @@
+<!-- <%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="UTF-8"%> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>学生成绩管理系统</title>
+    <link rel="stylesheet" href=".//layui/css/layui.css">
+</head>
+
+<body>
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo layui-hide-xs layui-bg-black">学生成绩管理系统</div>
+        <!-- 头部区域（可配合layui 已有的水平导航） -->
+        <h1 align="center" class="layui-bg-green">课程信息</h1>
+
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                <a href="javascript:;">
+                    admin
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">个人信息</a></dd>
+                    <dd><a href="login.html">退出登录</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item"><a href="admin_studentinfo.html">学生信息</a></li>
+                <li class="layui-nav-item"><a href="admin_teacherinfo.html">教师信息</a></li>
+                <li class="layui-nav-item"><a href="admin_classinfo.html">班级信息</a></li>
+                <li class="layui-nav-item"><a href="admin_courseinfo.html">课程信息</a></li>
+                <li class="layui-nav-item"><a href="admin_studentcourse.html">选课成绩</a></li>
+                <li class="layui-nav-item"><a href="system.html">系统配置</a></li>
+                <li class="layui-nav-item"><a href="admin_statistics.html">成绩统计</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="layui-body">
+        <!-- 内容主体区域 -->
+
+        <table class="layui-hide" id="test" lay-filter="test"></table>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
+                <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
+                <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+            </div>
+        </script>
+
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+
+        <script src=".//layui/layui.js" charset="utf-8"></script>
+
+        <script>
+            layui.use('table', function () {
+                var table = layui.table;
+                $ = layui.$
+                table.render({
+                    elem: '#test'
+                    , url: '/test/table/demo1.json'
+                    , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
+                    , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
+                        title: '提示'
+                        , layEvent: 'LAYTABLE_TIPS'
+                        , icon: 'layui-icon-tips'
+                    }]
+                    , parseData: function (res) {
+                        //分页
+                        var result;//存储分页后的数据
+                        if (this.page.curr) {//显示第n页的数据
+                            result = res.data.slice(this.limit * (this.page.curr - 1), this.limit * this.page.curr);
+                        } else {
+                            result = res.data.slice(0, this.limit);
+                        }
+                        console.log(res)
+                        return {
+                            "code": 0,
+                            "msg": "",
+                            "count": res.data.length,
+                            "data": result  //改成分页的数据
+                        }
+
+
+                    }
+                    , page: { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
+                        layout: ['limit', 'count', 'prev', 'page', 'next', 'skip'] //自定义分页布局
+                        //,curr: 5 //设定初始在第 5 页
+                        , groups: 1 //只显示 1 个连续页码
+                        , first: false //不显示首页
+                        , last: false //不显示尾页
+
+                    }
+                    , title: '用户数据表'
+                    , cols: [[
+                        {type: 'checkbox', fixed: 'left'}
+                        , {field: 'course_id', title: '课程编号', width: 200, fixed: 'left', unresize: true, sort: true}
+                        , {field: 'course_name', title: '课程名称', width: 200, edit: 'text'}
+                        , {field: 'time', title: '授课时间', width: 200}
+                        , {field: 'classroom', title: '授课地点', width: 200, sort: true}
+                        , {field: 'teacher_id', title: '授课教师', width: 200, sort: true}
+                        , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+                    ]]
+                    , limit: 10
+                    , limits: [1, 3, 5, 10]
+                });
+
+                //头工具栏事件
+                table.on('toolbar(test)', function (obj) {
+                    var checkStatus = table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'getCheckData':
+                            var data = checkStatus.data;
+                            layer.alert(JSON.stringify(data));
+                            break;
+                        case 'getCheckLength':
+                            var data = checkStatus.data;
+                            layer.msg('选中了：' + data.length + ' 个');
+                            break;
+
+                        case 'isAll':
+                            layer.msg(checkStatus.isAll ? '全选' : '未全选');
+                            break;
+                        case 'add':
+                            var field_list = []
+                            var title_list = []
+                            console.log(obj)
+                            var cols = obj.config.cols[0]
+                            for (var i = 1; i < cols.length - 1; i++) {
+                                field_list.push(cols[i].field)
+                                title_list.push(cols[i].title)
+                            }
+                            var content = '<form class="layui-form" action="">'
+                            for (var i = 0; i < field_list.length; i++) {
+                                content += `<div class="layui-form-item"><label class="layui-form-label">${title_list[i]}</label><div class="layui-input-block"><input type="text" name="${field_list[i]}" required  lay-verify="required" placeholder="请输入${title_list[i]}" autocomplete="off" class="layui-input"></div></div>`
+                            }
+                            content += '<div class="layui-form-item"> <div class="layui-input-block"> <button class="layui-btn" lay-submit lay-filter="addForm">立即提交</button> </div> </div>' + '</from>'
+                            layer.open({
+                                title: '录入',
+                                type: 1,
+                                area: ['40%', '50%'],
+                                content: content
+                            });
+                            break;
+                        //自定义头工具栏右侧图标 - 提示
+                        case 'LAYTABLE_TIPS':
+                            layer.alert('暂无更多');
+                            break;
+                    }
+                    ;
+                });
+
+                //监听行工具事件
+                table.on('tool(test)', function (obj) {
+                        var data = obj.data;
+                        //console.log(obj)
+                        if (obj.event === 'del') {
+                            layer.confirm('确定要删除吗', function (index) {
+                                obj.del();
+                                layer.close(index);
+                                $.ajax({
+                                    url: "/delete/" + obj.data["student_id"],
+                                    type: "get",
+                                    success: function (result) {
+                                        if (result.success) {
+                                            layer.msg(result.msg, {icon: 1, time: 2000, title: '成功'})  //返回数据成功时弹框
+                                        } else {
+                                            layer.msg(result.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
+                                        }
+                                    },
+                                })
+                            })
+                            ;
+                        } else if (obj.event === 'edit') {
+                            var field_list = []
+                            var value_list = []
+                            var is_edit = []
+                            console.log(obj.data)
+                            var data = obj.data
+
+                            for (var key in data) {
+                                field_list.push(key)
+                                value_list.push(data[key])
+                                if (key === "course_id")
+                                    is_edit.push("")
+                                else if (key === "course_name")
+                                    is_edit.push("")
+                                else if (key === "time")
+                                    is_edit.push("")
+                                else if (key === "classroom")
+                                    is_edit.push("")
+                                else if (key === "teacher_id")
+                                    is_edit.push("")
+                                else
+                                    is_edit.push(`disabled="disabled"`)
+                            }
+                            var content = '<form class="layui-form" action="">'
+                            for (var i = 0; i < field_list.length; i++) {
+                                content += `<div class="layui-form-item"><label class="layui-form-label">${field_list[i]}</label><div class="layui-input-block"><input type="text" ${is_edit[i]} name="${field_list[i]}" required  lay-verify="required" value="${value_list[i]}" er="${value_list[i]}" autocomplete="off" class="layui-input"></div></div>`
+                            }
+                            content += '<div class="layui-form-item"> <div class="layui-input-block"> <button class="layui-btn" lay-submit lay-filter="editForm">立即提交</button> </div> </div>' + '</from>'
+                            console.log(content)
+                            layer.open({
+                                title: "编辑",
+                                type: 1,
+                                shade: 0.2,
+                                maxmin: true,
+                                shadeClose: true,
+                                area: ['50%', '50%'],
+                                content: content,
+
+                            })
+                            ;
+                        }
+                    }
+                )
+                ;
+            });
+        </script>
+        <script>
+            //监听录入表单提交
+            layui.use('form', function () {
+                var form = layui.form;
+                //监听提交
+                form.on('submit(addForm)', function (data) {
+                    layer.msg(JSON.stringify(data.field));
+                    $.ajax({
+                            url: "/add",
+                            type: "POST",
+                            data: data.field,
+                            success: function (msg) {
+                                alert(msg.msg)
+                            }
+                        }
+                    )
+
+                    return false;
+                });
+                form.on('submit(editForm)', function (data) {
+                    layer.msg(JSON.stringify(data.field));
+                    $.ajax({
+                            url: "/edit",
+                            type: "POST",
+                            data: data.field,
+                            success: function (msg) {
+                                alert(msg.msg)
+                            }
+                        }
+                    )
+
+                    return false;
+                });
+            });
+        </script>
+    </div>
+</div>
+</body>
+</html>
+      
