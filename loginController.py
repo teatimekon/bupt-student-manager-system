@@ -8,6 +8,7 @@ login = Blueprint('login', __name__, template_folder="templates", static_folder=
 
 @login.get("/login")
 def init_login():
+    login_info.my_id = ""
     return render_template("login.html")
 
 
@@ -22,6 +23,7 @@ def login_check():
         mess = "账号或密码错误！请重试！"
         return jsonify({'success': 0, 'msg': mess})
     elif kind == "admin" and user_id == "admin" and password == "admin":
+        login_info.my_id = "admin"
         return jsonify({'success': 1, 'msg': "管理员登陆成功"})
     stu_sql = "select `student_id`,`password` from `StudentInfo`"
     db.cursor.execute(stu_sql)

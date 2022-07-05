@@ -1,7 +1,8 @@
-from flask import Flask, jsonify, request, redirect
+from flask import Flask, jsonify, request, redirect, render_template
 
 import dbInfo.db as db
 import dbInfo.studentInfo as stuInfo
+import login_info
 from admin import admin
 from loginController import login
 from student import student
@@ -21,18 +22,18 @@ def hello_world():  # put application's code here
     return redirect("/login")
 
 
-# @app.before_request
-# def before():
-#     url = request.url
-#     passUrl = ["http://127.0.0.1:5000/login"]
-#     print(url)
-#     if url in passUrl:
-#         pass
-#     else:
-#         if login_info.my_id == "":
-#             return redirect(url_for('login.init_login'))
-#         else:
-#             pass
+@app.before_request
+def before():
+    url = request.url
+    passUrl = ["http://127.0.0.1:5000/login", "http://127.0.0.1:5000/static/*"]
+    print(url)
+    if url in passUrl or "static" in url:
+        pass
+    else:
+        if login_info.my_id == "":
+            return render_template("login.html")
+        else:
+            pass
 
 
 @app.get('/test/table/demo1.json')

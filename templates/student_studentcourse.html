@@ -23,7 +23,7 @@
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">个人信息</a></dd>
-                    <dd><a href="login.html">退出登录</a></dd>
+                    <dd><a href="/login">退出登录</a></dd>
                 </dl>
             </li>
         </ul>
@@ -65,9 +65,10 @@
                     , title: '用户数据表'
                     , cols: [[
                         {type: 'checkbox', fixed: 'left'}
-                        , {field: 'student_id', title: '学号', width: 200, fixed: 'left', unresize: true, sort: true}
-                        , {field: 'course_id', title: '课程编号', width: 200, sort: true}
-                        , {field: 'grade', title: '成绩', width: 200, sort: true}
+                        , {field: 'student_id', title: '学号', width: 150, fixed: 'left', unresize: true, sort: true}
+                        , {field: 'course_id', title: '课程编号', width: 150, sort: true}
+                        , {field: 'course_name', title: '课程名称', width: 150, sort: true}
+                        , {field: 'grade', title: '成绩', width: 150, sort: true}
                     ]]
                     , page: true
                 });
