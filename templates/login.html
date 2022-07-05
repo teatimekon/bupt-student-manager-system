@@ -13,60 +13,61 @@
 <script src="../static/layui/layui.js" charset="utf-8"></script>
 
 <div class="layui-form-item">
-    <div align="center">
+    <div class="top">
         <br><br><br>
         <h2>学生成绩管理系统</h2>
         <br><br>
         <h1>登录</h1>
-        <hr/>
+        <br><br>
     </div>
+    <div class="mainWindow" id="mainWindow">
+        <form class="layui-form" action="" style="text-align: center">
 
-    <form class="layui-form" action="" style="text-align: center">
-
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">账号</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="userid" name="userid" required lay-verify="required" placeholder="请输入账号"
-                           autocomplete="off" class="layui-input">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">账号</label>
+                    <div class="layui-input-inline">
+                        <input type="text" id="userid" name="userid" required lay-verify="required" placeholder="请输入账号"
+                               autocomplete="off" class="layui-input">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">密码</label>
-                <div class="layui-input-inline">
-                    <input type="password" id="password" name="password" required lay-verify="required"
-                           placeholder="请输入密码" autocomplete="off" class="layui-input">
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">密码</label>
+                    <div class="layui-input-inline">
+                        <input type="password" id="password" name="password" required lay-verify="required"
+                               placeholder="请输入密码" autocomplete="off" class="layui-input">
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <label class="layui-form-label">登录身份</label>
-                <div class="layui-input-inline">
-                    <select id="identity" name="identity" lay-verify="required">
-                        <option value=""></option>
-                        <option value="student">学生</option>
-                        <option value="teacher">教师</option>
-                        <option value="admin">管理员</option>
-                    </select>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">登录身份</label>
+                    <div class="layui-input-inline">
+                        <select id="identity" name="identity" lay-verify="required">
+                            <option value=""></option>
+                            <option value="student">学生</option>
+                            <option value="teacher">教师</option>
+                            <option value="admin">管理员</option>
+                        </select>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="layui-form-item">
-            <div class="layui-inline">
-                <div class="layui-input-block">
-                    <button type="button" class="layui-btn" lay-submit lay-filter="formSave" onclick="log_in()">登录
-                    </button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <div class="layui-input-block">
+                        <button type="button" class="layui-btn" lay-submit lay-filter="formSave" onclick="log_in()">登录
+                        </button>
+                        <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    </div>
 </div>
 
 <script>
@@ -135,3 +136,38 @@
 
 </body>
 </html>
+<style>
+    body {
+        background: url("/static/sky1_8k.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100%;
+    }
+
+    html {
+        height: 100%;
+    }
+
+    .mainWindow {
+        position: relative;
+        background-color: white;
+        opacity: 0.5;
+        width: 40%;
+        height: 80%;
+        top: 10%;
+        left: 30%;
+        padding: 30px;
+        /* animation-name: example;
+        animation-duration: 3s;
+        animation-fill-mode: forwards; */
+    }
+
+    .top {
+        text-align: center;
+    }
+
+    .layui-input-block {
+        text-align: center;
+        margin: auto;
+    }
+</style>
