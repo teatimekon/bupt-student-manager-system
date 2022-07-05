@@ -1,3 +1,5 @@
+import collections
+
 from flask import Blueprint, jsonify, render_template, request
 
 import dbInfo.classInfo as claInfo
@@ -285,6 +287,7 @@ def admin_edit_system():  # 编辑密码
         teaInfo.update_password(id, password)
     return jsonify({'success': 1, 'msg': "密码修改成功！"})
 
+
 # @admin.post("/admin/system/add")
 # def admin_add_system():
 #     post_data = request.form.to_dict()
@@ -293,3 +296,18 @@ def admin_edit_system():  # 编辑密码
 #         if stuInfo.select_my_info(id):
 #             return jsonify({'success': 0, 'msg': "该学生已存在！"})
 #         else:
+@admin.route("/admin/statistics")
+def to_statistics():
+    return render_template("admin_statistics.html")
+
+
+@admin.route("/admin/json/statistics")
+def send_json():
+    ls = couInfo.select_all_course_grade()
+    dic = collections.defaultdict(list)
+    for i in ls:
+        dic[i["course_name"]].append(i["grade"])
+
+    data = {'success': 1, "code": 0, "msg": "", "count": len(ls), "page": "true", "data": dic}
+
+    return jsonify(data)

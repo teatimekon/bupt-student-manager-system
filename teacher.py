@@ -1,3 +1,5 @@
+import collections
+
 from flask import Blueprint, request, jsonify, render_template
 
 import dbInfo.courseInfo as couInfo
@@ -63,10 +65,28 @@ def add_student_info():
     if post_data["student_name"] != stuInfo.select_my_info(post_data["student_id"])[0]["student_name"]:
         return jsonify({'success': 0, 'msg': '姓名与学号不一致，对应姓名为{name}请重新录入！'.format(
             name=stuInfo.select_my_info(post_data["student_id"])[0]["student_name"])})
-    elif post_data["course_name"] != couInfo.select_one_ourse(post_data["course_id"])[0]["course_name"]:
+    elif post_data["course_name"] != couInfo.select_one_course(post_data["course_id"])[0]["course_name"]:
         return jsonify({'success': 0, 'msg': "课程ID与课程名不一致，对应名字为{name}请重新录入！".format(
-            name=couInfo.select_one_ourse(post_data["course_id"])[0]["course_name"])})
+            name=couInfo.select_one_course(post_data["course_id"])[0]["course_name"])})
     grade = graInfo.GradeInfo([post_data["student_id"], post_data["course_id"], post_data["grade"]])
-    grade.save_course()
+    grade.save_grade()
 
     return jsonify({'success': 1, 'msg': '数据录入成功！'})
+
+
+@teacher.route("/teacher/statistics/<id>")
+def to_statistics(id=None):
+    return render_template("teacher_statistics.html")
+
+
+@teacher.route("/teacher/json/statistics/<id>")
+def send_json(id=None):
+    ls = couInfo.select_my_course_grade(id)
+    print(ls)
+    dic = collections.defaultdict(list)
+    for i in ls:
+        dic[i["course_name"]].append(i["grade"])
+
+    data = {'success': 1, "code": 0, "msg": "", "count": len(ls), "page": "true", "data": dic}
+
+    return jsonify(data)

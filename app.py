@@ -21,6 +21,20 @@ def hello_world():  # put application's code here
     return redirect("/login")
 
 
+# @app.before_request
+# def before():
+#     url = request.url
+#     passUrl = ["http://127.0.0.1:5000/login"]
+#     print(url)
+#     if url in passUrl:
+#         pass
+#     else:
+#         if login_info.my_id == "":
+#             return redirect(url_for('login.init_login'))
+#         else:
+#             pass
+
+
 @app.get('/test/table/demo1.json')
 def returnJson():
     list = stuInfo.select()

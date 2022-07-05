@@ -3,84 +3,260 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <title>学生成绩管理系统</title>
-  <link rel="stylesheet" href=".//layui/css/layui.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>学生成绩管理系统</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='layui/css/layui.css') }}">
 </head>
 
 <body>
-  <div class="layui-layout layui-layout-admin">
+<div class="layui-layout layui-layout-admin">
     <div class="layui-header">
-      <div class="layui-logo layui-hide-xs layui-bg-black">学生成绩管理系统</div>
-      <!-- 头部区域（可配合layui 已有的水平导航） -->
-      <h1 align="center" class="layui-bg-green">成绩统计</h1>
+        <div class="layui-logo layui-hide-xs layui-bg-black">学生成绩管理系统</div>
+        <!-- 头部区域（可配合layui 已有的水平导航） -->
+        <h1 align="center" class="layui-bg-green">成绩统计</h1>
 
-      <ul class="layui-nav layui-layout-right">
-        <li class="layui-nav-item layui-hide layui-show-md-inline-block">
-          <a href="javascript:;">
-            admin
-          </a>
-          <dl class="layui-nav-child">
-            <dd><a href="">个人信息</a></dd>
-            <dd><a href="login.html">退出登录</a></dd>
-          </dl>
-        </li>
-      </ul>
-    </div>
-    
-    <div class="layui-side layui-bg-black">
-      <div class="layui-side-scroll">
-        <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-        <ul class="layui-nav layui-nav-tree" lay-filter="test">
-          <li class="layui-nav-item"><a href="admin_studentinfo.html">学生信息</a></li>
-          <li class="layui-nav-item"><a href="admin_teacherinfo.html">教师信息</a></li>
-          <li class="layui-nav-item"><a href="admin_classinfo.html">班级信息</a></li>
-          <li class="layui-nav-item"><a href="admin_courseinfo.html">课程信息</a></li>
-          <li class="layui-nav-item"><a href="admin_studentcourse.html">选课成绩</a></li>
-          <li class="layui-nav-item"><a href="system.html">系统配置</a></li>
-          <li class="layui-nav-item"><a href="admin_statistics.html">成绩统计</a></li>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item layui-hide layui-show-md-inline-block">
+                <a href="javascript:;">
+                    admin
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="">个人信息</a></dd>
+                    <dd><a href="/login">退出登录</a></dd>
+                </dl>
+            </li>
         </ul>
-      </div>
     </div>
-    
+
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree" lay-filter="test">
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(0)">学生信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(1)">教师信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(2)">班级信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(3)">课程信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(4)">选课成绩</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(5)">系统配置</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(6)">成绩统计</a></li>
+            </ul>
+        </div>
+    </div>
+
     <div class="layui-body">
-      <!-- 内容主体区域 -->
-      <body>
-        
-      </body>
+        <!-- 内容主体区域 -->
+        <body>
+        <button class="layui-btn" id="demo1">
+            选择课程
+            <i class="layui-icon layui-icon-down layui-font-12"></i>
+        </button>
+        <div class="draw">
+
+            <div id="teacher_grade" style="width: 40vw; height: 400px"></div>
+            <div id="teacher_grade_pie" style="width: 40vw; height: 400px"></div>
+
+        </div>
+        </body>
     </div>
-  </div>
+</div>
 
-  <script src="./layui/layui.js"></script>
+<script src="{{ url_for('static',filename='layui/layui.js') }}"></script>
+<script src="{{ url_for('static',filename='echarts.js') }}"></script>
 
-  <script>
-  //JS 
-  layui.use('element', function(){
-    var element = layui.element
-    ,layer = layui.layer
-    ,util = layui.util
-    var $ = layui.$;
-    //头部事件
-    util.event('lay-header-event', {
-      //左侧菜单事件
-      menuLeft: function(othis){
-        layer.msg('展开左侧菜单的操作', {icon: 0});
-      }
-      ,menuRight: function(){
-        layer.open({
-          type: 1
-          ,content: '<div style="padding: 15px;">处理右侧面板的操作</div>'
-          ,area: ['260px', '100%']
-          ,offset: 'rt' //右上角
-          ,anim: 5
-          ,shadeClose: true
+<script>
+    //JS
+    function click_admin_method(seq) {
+        switch (seq) {
+            case 0:  {# 跳转到第一个 #}
+                window.location.href = "/admin/student"
+                break;
+            case 1:
+                window.location.href = "/admin/teacher"
+                break;
+            case 2:
+                window.location.href = "/admin/class"
+                break;
+            case 3:
+                window.location.href = "/admin/course"
+                break;
+            case 4:
+                window.location.href = "/admin/grade"
+                break;
+            case 5:
+                window.location.href = "/admin/system"
+                break;
+            case 6:
+                window.location.href = "/admin/statistics"
+                break;
+        }
+    }
+
+    layui.use('element', function () {
+        var element = layui.element
+            , layer = layui.layer
+            , util = layui.util
+        var $ = layui.$;
+        //头部事件
+        util.event('lay-header-event', {
+            //左侧菜单事件
+            menuLeft: function (othis) {
+                layer.msg('展开左侧菜单的操作', {icon: 0});
+            }
+            , menuRight: function () {
+                layer.open({
+                    type: 1
+                    , content: '<div style="padding: 15px;">处理右侧面板的操作</div>'
+                    , area: ['260px', '100%']
+                    , offset: 'rt' //右上角
+                    , anim: 5
+                    , shadeClose: true
+                });
+            }
         });
-      }
+
     });
-    
-  });
-  </script>
+    var chart = echarts.init(document.getElementById("teacher_grade"))
+    var chart_pie = echarts.init(document.getElementById("teacher_grade_pie"))
+    var Histogram_option = {
+        xAxis: {
+            data: ['0-60', '60-70', '70-80', '80-90', '90-100']
+        },
+        yAxis: {},
+        series: [
+            {
+                type: 'bar',
+                data: new Array(5).fill(0),
+                label: {
+                    normal: {
+                        show: true,
+                        position: 'top',
+                        textStyle: {
+                            color: 'black',
+                            fontsize: 16
+                        }
+                    }
+                },
+
+            }
+        ]
+    };
+    var pie_option = {
+        title: {
+
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        },
+        series: [
+            {
+                name: '得分人数',
+                type: 'pie',
+                radius: '50%',
+                data: [],
+                emphasis: {
+                    itemStyle: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    var course_data = null
+    var course_name_list = []
+    layui.$.ajax({
+        url: "/admin/json/statistics",
+        type: "get",
+        success: function (result) {
+            if (result.success) {
+                console.log(result.data)
+                course_data = result.data
+                course_name_list = Object.keys(course_data)
+                {#draw_chart("互联网应用")#}
+                layui.use('dropdown', function () {
+                    var data_list = []
+                    for (var i = 0; i < course_name_list.length; i++) {
+                        data_list.push({'title': course_name_list[i], 'id': i})
+                    }
+                    console.log(data_list)
+                    var dropdown = layui.dropdown
+                    dropdown.render({
+                        elem: '#demo1' //可绑定在任意元素中，此处以上述按钮为例
+                        , data: data_list
+                        , id: 'demo1'
+                        //菜单被点击的事件
+                        , click: function (obj) {
+                            draw_chart(obj.title)
+                        }
+                    });
+                });
+            } else {
+                layer.msg(result.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
+            }
+        },
+    })
+
+    function draw_chart(course_name) {
+        var course_list = course_data[course_name]
+        var pie_list = []
+        var statistic_data = [0, 0, 0, 0, 0]
+        for (let i of course_list) {
+            if (i < 60)
+                statistic_data[0]++;
+            else
+                statistic_data[Math.ceil((i - 60) / 10)]++;
+        }
+        pie_list.push(
+            {
+                value: statistic_data[0],
+                name: "0-60"
+            },
+            {
+                value: statistic_data[1],
+                name: "60-70"
+            },
+            {
+                value: statistic_data[2],
+                name: "70-80"
+            },
+            {
+                value: statistic_data[3],
+                name: "80-90"
+            },
+            {
+                value: statistic_data[4],
+                name: "90-100"
+            }
+        )
+        console.log(statistic_data)
+        Histogram_option.series[0].data = statistic_data;
+        pie_option.series[0].data = pie_list
+        pie_option.title["text"] = course_name + "成绩统计"
+        console.log(Histogram_option)
+        chart.setOption(Histogram_option)
+        chart_pie.setOption(pie_option)
+    }
+
+</script>
 </body>
 </html>
-      
+<style>
+    .draw {
+        height: 80%;
+        width: 100%;
+        position: relative;
+        text-align: center;
+        margin-top: 100px;
+    }
+
+    #teacher_grade, #teacher_grade_pie {
+        display: inline-block;
+    }
+</style>

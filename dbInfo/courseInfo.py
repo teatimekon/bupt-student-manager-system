@@ -45,6 +45,21 @@ def select_my_course(key):
     return ret
 
 
+def select_my_course_grade(key):
+    sql = "select t1.course_id,t1.course_name,t2.grade,t2.student_id from `CourseInfo` as t1,`StudentCourse` as t2 where t1.`course_id` = t2.`course_id` and `teacher_id` = '{key}'".format(
+        key=key)
+    db.cursor.execute(sql)
+    ret = db.cursor.fetchall()
+    return ret
+
+
+def select_all_course_grade():
+    sql = "select t1.course_id,t1.course_name,t2.grade,t2.student_id from `CourseInfo` as t1,`StudentCourse` as t2 WHERE t1.course_id = t2.course_id"
+    db.cursor.execute(sql)
+    ret = db.cursor.fetchall()
+    return ret
+
+
 def deleteOne(key):
     sql = "DELETE FROM `CourseInfo` WHERE `course_id` = '{key}'".format(key=key)
     db.cursor.execute(sql)
