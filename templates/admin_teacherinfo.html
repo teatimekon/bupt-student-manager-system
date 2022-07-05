@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <title>学生成绩管理系统</title>
-    <link rel="stylesheet" href=".//layui/css/layui.css">
+    <link rel="stylesheet" href="{{ url_for('static',filename='layui/css/layui.css') }}">
 </head>
 
 <body>
@@ -23,7 +23,7 @@
                 </a>
                 <dl class="layui-nav-child">
                     <dd><a href="">个人信息</a></dd>
-                    <dd><a href="login.html">退出登录</a></dd>
+                    <dd><a href="/login">退出登录</a></dd>
                 </dl>
             </li>
         </ul>
@@ -33,13 +33,13 @@
         <div class="layui-side-scroll">
             <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
             <ul class="layui-nav layui-nav-tree" lay-filter="test">
-                <li class="layui-nav-item"><a href="admin_studentinfo.html">学生信息</a></li>
-                <li class="layui-nav-item"><a href="admin_teacherinfo.html">教师信息</a></li>
-                <li class="layui-nav-item"><a href="admin_classinfo.html">班级信息</a></li>
-                <li class="layui-nav-item"><a href="admin_courseinfo.html">课程信息</a></li>
-                <li class="layui-nav-item"><a href="admin_studentcourse.html">选课成绩</a></li>
-                <li class="layui-nav-item"><a href="system.html">系统配置</a></li>
-                <li class="layui-nav-item"><a href="admin_statistics.html">成绩统计</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(0)">学生信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(1)">教师信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(2)">班级信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(3)">课程信息</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(4)">选课成绩</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(5)">系统配置</a></li>
+                <li class="layui-nav-item"><a href="javascript:void(0);" onclick="click_admin_method(6)">成绩统计</a></li>
             </ul>
         </div>
     </div>
@@ -53,6 +53,7 @@
                 <button class="layui-btn layui-btn-sm" lay-event="getCheckData">获取选中行数据</button>
                 <button class="layui-btn layui-btn-sm" lay-event="getCheckLength">获取选中数目</button>
                 <button class="layui-btn layui-btn-sm" lay-event="isAll">验证是否全选</button>
+                <button class="layui-btn layui-btn-sm" lay-event="add">录入</button>
             </div>
         </script>
 
@@ -61,15 +62,43 @@
             <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
         </script>
 
-        <script src=".//layui/layui.js" charset="utf-8"></script>
+        <script src="{{ url_for('static',filename='layui/layui.js') }}" charset="utf-8"></script>
 
         <script>
+            var tb = null
+
+            function click_admin_method(seq) {
+                switch (seq) {
+                    case 0:  {# 跳转到第一个 #}
+                        window.location.href = "/admin/student"
+                        break;
+                    case 1:
+                        window.location.href = "/admin/teacher"
+                        break;
+                    case 2:
+                        window.location.href = "/admin/class"
+                        break;
+                    case 3:
+                        window.location.href = "/admin/course"
+                        break;
+                    case 4:
+                        window.location.href = "/admin/grade"
+                        break;
+                    case 5:
+                        window.location.href = "/admin/system"
+                        break;
+                    case 6:
+                        window.location.href = "/admin/statistics"
+                        break;
+                }
+            }
+
             layui.use('table', function () {
                 var table = layui.table;
                 $ = layui.$
-                table.render({
+                tb = table.render({
                     elem: '#test'
-                    , url: '/test/table/demo1.json'
+                    , url: '/admin/json/teacher'
                     , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
                     , defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
                         title: '提示'
@@ -169,7 +198,7 @@
                                 obj.del();
                                 layer.close(index);
                                 $.ajax({
-                                    url: "/delete/" + obj.data["student_id"],
+                                    url: "/admin/teacher/delete/" + obj.data["teacher_id"],
                                     type: "get",
                                     success: function (result) {
                                         if (result.success) {
@@ -206,6 +235,7 @@
                             for (var i = 0; i < field_list.length; i++) {
                                 content += `<div class="layui-form-item"><label class="layui-form-label">${field_list[i]}</label><div class="layui-input-block"><input type="text" ${is_edit[i]} name="${field_list[i]}" required  lay-verify="required" value="${value_list[i]}" er="${value_list[i]}" autocomplete="off" class="layui-input"></div></div>`
                             }
+                            content += `<div style="display: none;" class="layui-form-item"><label class="layui-form-label"></label><div class="layui-input-block"><input value="${data["teacher_id"]}" type="text" name="oldId" required  lay-verify="required"  autocomplete="off" class="layui-input"></div></div>`
                             content += '<div class="layui-form-item"> <div class="layui-input-block"> <button class="layui-btn" lay-submit lay-filter="editForm">立即提交</button> </div> </div>' + '</from>'
                             console.log(content)
                             layer.open({
@@ -233,11 +263,17 @@
                 form.on('submit(addForm)', function (data) {
                     layer.msg(JSON.stringify(data.field));
                     $.ajax({
-                            url: "/add",
+                            url: "/admin/teacher/add",
                             type: "POST",
                             data: data.field,
                             success: function (msg) {
-                                alert(msg.msg)
+                                if (msg.success) {
+                                    alert(msg.msg)  //返回数据成功时弹框
+                                    layer.closeAll()
+                                    tb.reload()
+                                } else {
+                                    layer.msg(msg.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
+                                }
                             }
                         }
                     )
@@ -247,11 +283,17 @@
                 form.on('submit(editForm)', function (data) {
                     layer.msg(JSON.stringify(data.field));
                     $.ajax({
-                            url: "/edit",
+                            url: "/admin/teacher/edit",
                             type: "POST",
                             data: data.field,
                             success: function (msg) {
-                                alert(msg.msg)
+                                if (msg.success) {
+                                    alert(msg.msg)  //返回数据成功时弹框
+                                    layer.closeAll()
+                                    tb.reload()
+                                } else {
+                                    layer.msg(msg.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
+                                }
                             }
                         }
                     )

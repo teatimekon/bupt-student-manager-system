@@ -24,10 +24,24 @@ class TeacherInfo:
 
 
 def select():
-    sql = "select * from `TeacherInfo`"
+    sql = "select `teacher_id`,`teacher_name`,`teacher_age`,`teacher_sex` from `TeacherInfo`"
     db.cursor.execute(sql)
     ret = db.cursor.fetchall()
     return ret
+
+
+def update_all(teacher_id, oldId, teacher_name, age, sex):
+    sql = "UPDATE `TeacherInfo` SET `teacher_id`= '{teacher_id}',`teacher_name`='{teacher_name}',`teacher_age`='{age}',`teacher_sex`='{sex}' WHERE teacher_id = '{oldId}'".format(
+        teacher_id=teacher_id, teacher_name=teacher_name, sex=sex, age=age, oldId=oldId)
+    db.cursor.execute(sql)
+    db.conn.commit()
+
+
+def update_password(id, password):
+    sql = "UPDATE `TeacherInfo` SET `password`= '{password}' WHERE teacher_id = '{id}'".format(
+        id=id, password=password)
+    db.cursor.execute(sql)
+    db.conn.commit()
 
 
 def deleteOne(key):
@@ -46,7 +60,7 @@ def select_my_info(key):
 
 
 def select_my_student(key):
-    sql = "SELECT `student_id`, `student_name`, `class_id`, `age`, `sex` FROM `StudentInfo` NATURAL JOIN `CourseInfo` NATURAL JOIN `StudentCourse` WHERE `teacher_id` = '{key}'".format(
+    sql = "SELECT `t4`.`student_id`, `t4`.`student_name`,`t4`. `class_id`, `t4`.`age`, `t4`.`sex` FROM `TeacherInfo` as `t1`, `CourseInfo` as `t2` ,`StudentCourse` AS `t3` , `StudentInfo` as `t4` WHERE `t1`.`teacher_id` = `t2`.`teacher_id` and `t2`.`course_id` = `t3`.`course_id` and `t3`.`student_id` = `t4`.`student_id` AND `t1`.`teacher_id` = {key}".format(
         key=key)
     db.cursor.execute(sql)
     ret = db.cursor.fetchall()
@@ -54,7 +68,7 @@ def select_my_student(key):
 
 
 def select_my_student_grade(key):
-    sql = "SELECT `student_id`,`student_name`,`course_id`,`course_name`,`grade` FROM `TeacherInfo` NATURAL JOIN `StudentInfo` NATURAL JOIN `CourseInfo` NATURAL JOIN `StudentCourse` WHERE `teacher_id` = '{key}'".format(
+    sql = "SELECT t4.`student_id`,t4.`student_name`,t2.`course_id`,t2.`course_name`,t3.`grade` FROM `TeacherInfo` as t1, CourseInfo as t2 ,StudentCourse AS t3 , StudentInfo as t4 WHERE t1.teacher_id = t2.teacher_id and t2.course_id = t3.course_id and t3.student_id = t4.student_id AND t1.teacher_id = {key}".format(
         key=key)
     db.cursor.execute(sql)
     ret = db.cursor.fetchall()

@@ -23,6 +23,7 @@ def show_teacher(id=None):  # 展示老师信息
 
 @teacher.route("/teacher/json/grade/<id>")
 def show_student_grade_json(id=None):
+    print(id)
     list = teaInfo.select_my_student_grade(id)
     data = {"code": 0, "msg": "", "count": len(list), "page": "true", "data": list}
     return jsonify(data)

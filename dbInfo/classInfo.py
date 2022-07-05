@@ -23,3 +23,25 @@ def select():
     db.cursor.execute(sql)
     ret = db.cursor.fetchall()
     return ret
+
+
+def update_all(class_id, oldId, class_name, professional_name):
+    sql = "UPDATE `ClassInfo` SET `class_id`= '{class_id}',`class_name`='{class_name}',`professional_name` = '{professional_name}' WHERE `class_id` = '{oldId}'".format(
+        class_id=class_id, class_name=class_name, professional_name=professional_name, oldId=oldId)
+    db.cursor.execute(sql)
+    db.conn.commit()
+
+
+def select_class(key):
+    sql = "SELECT * FROM `ClassInfo` WHERE `class_id` = '{key}'".format(
+        key=key)
+    db.cursor.execute(sql)
+    ret = db.cursor.fetchall()
+    return ret
+
+
+def deleteOne(key):
+    sql = "DELETE FROM `ClassInfo` WHERE `class_id` = '{key}'".format(key=key)
+    db.cursor.execute(sql)
+    db.conn.commit()
+    print("删除{key}成功".format(key=key))

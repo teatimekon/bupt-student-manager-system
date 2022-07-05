@@ -2,7 +2,7 @@ from flask import Flask, jsonify, request, redirect
 
 import dbInfo.db as db
 import dbInfo.studentInfo as stuInfo
-from admin import manager
+from admin import admin
 from loginController import login
 from student import student
 from teacher import teacher
@@ -11,7 +11,7 @@ app = Flask(__name__, template_folder="./templates", static_folder="./static")
 
 app.register_blueprint(student)
 app.register_blueprint(teacher)
-app.register_blueprint(manager)
+app.register_blueprint(admin)
 app.register_blueprint(login)
 db.init()
 
@@ -39,7 +39,6 @@ def delete(parse=None):
 @app.post('/add')
 def add():
     data = request.form
-
     print(data)
     return jsonify({'msg': '数据接收成功'})
 

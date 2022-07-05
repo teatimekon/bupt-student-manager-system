@@ -22,7 +22,7 @@ def login_check():
         mess = "账号或密码错误！请重试！"
         return jsonify({'success': 0, 'msg': mess})
     elif kind == "admin" and user_id == "admin" and password == "admin":
-        return render_template("admin_classinfo.html")
+        return jsonify({'success': 1, 'msg': "管理员登陆成功"})
     stu_sql = "select `student_id`,`password` from `StudentInfo`"
     db.cursor.execute(stu_sql)
     stu_ret = db.cursor.fetchall()

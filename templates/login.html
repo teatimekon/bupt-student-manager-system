@@ -83,12 +83,14 @@
                 success: function (result) {
                     if (result.success) {
                         layer.msg(result.msg, {icon: 1, time: 2000, title: '成功'})  //返回数据成功时弹框
-                        {#if (data.field["identity"] === "admin")#}
-
-
-                        localStorage.setItem("id", data.field["userid"])
-                        console.log(`${data.field["identity"]}_studentinfo.html`)
-                        window.location.href = `/${data.field["identity"]}/info/${data.field["userid"]}`
+                        console.log(data.field["identity"])
+                        if (data.field["identity"] === "admin")
+                            window.location.href = "/admin/student"
+                        else {
+                            localStorage.setItem("id", data.field["userid"])
+                            console.log(`${data.field["identity"]}_studentinfo.html`)
+                            window.location.href = `/${data.field["identity"]}/info/${data.field["userid"]}`
+                        }
                     } else {
                         layer.msg(result.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
                     }

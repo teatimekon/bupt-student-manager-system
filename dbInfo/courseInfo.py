@@ -16,7 +16,7 @@ class CourseInfo:
         self.teacher_id = mes[4]
 
     def save_course(self):
-        sql = "INSERT INTO `TeacherInfo` (`course_id`, `course_name`, `time`, `classroom`, `teacher_id`) VALUES ('{course_id}', '{course_name}', '{time}', '{classroom}', '{teacher_id}')".format(
+        sql = "INSERT INTO `CourseInfo` (`course_id`, `course_name`, `time`, `classroom`, `teacher_id`) VALUES ('{course_id}', '{course_name}', '{time}', '{classroom}', '{teacher_id}')".format(
             course_id=self.course_id, course_name=self.course_name, time=self.time,
             classroom=self.classroom, teacher_id=self.teacher_id)
         db.cursor.execute(sql)
@@ -24,10 +24,18 @@ class CourseInfo:
 
 
 def select():
-    sql = "select * from `CourseInfo`"
+    sql = "select  `course_id`,`course_name`,`time`,`teacher_id`,`classroom` from `CourseInfo`"
     db.cursor.execute(sql)
     ret = db.cursor.fetchall()
     return ret
+
+
+def update_all(course_id, course_name, time, classroom, teacher_id, oldId):
+    sql = "UPDATE `CourseInfo` SET `course_id`= '{course_id}',`course_name`='{course_name}',`time` = '{time}',`classroom`='{classroom}' ,`teacher_id` = '{teacher_id}' WHERE `course_id` = '{oldId}'".format(
+        course_id=course_id, course_name=course_name, time=time, classroom=classroom, teacher_id=teacher_id,
+        oldId=oldId)
+    db.cursor.execute(sql)
+    db.conn.commit()
 
 
 def select_my_course(key):
@@ -44,8 +52,9 @@ def deleteOne(key):
     print("删除{key}成功".format(key=key))
 
 
-def select_one_ourse(key):
-    sql = "select * from `CourseInfo` WHERE `course_id` = '{key}'".format(key=key)
+def select_one_course(key):
+    sql = "select `course_id`,`course_name`,`time`,`teacher_id`,`classroom` from `CourseInfo` WHERE `course_id` = '{key}'".format(
+        key=key)
     db.cursor.execute(sql)
     ret = db.cursor.fetchall()
     return ret
