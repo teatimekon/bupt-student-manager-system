@@ -63,10 +63,11 @@
         <script src="{{ url_for('static',filename='layui/layui.js') }}" charset="utf-8"></script>
 
         <script>
+            var tb = null
             layui.use('table', function () {
                 var table = layui.table;
                 $ = layui.$
-                table.render({
+                tb = table.render({
                     elem: '#test'
                     , url: '/test/table/demo1.json'
                     , toolbar: '#toolbarDemo' //开启头部工具栏，并为其绑定左侧模板
@@ -233,7 +234,13 @@
                             type: "POST",
                             data: data.field,
                             success: function (msg) {
-                                alert(msg.msg)
+                                if (msg.success) {
+                                    alert(msg.msg)  //返回数据成功时弹框
+                                    layer.closeAll()
+                                    tb.reload()
+                                } else {
+                                    layer.msg(msg.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
+                                }
                             }
                         }
                     )
@@ -247,7 +254,13 @@
                             type: "POST",
                             data: data.field,
                             success: function (msg) {
-                                alert(msg.msg)
+                                if (msg.success) {
+                                    alert(msg.msg)  //返回数据成功时弹框
+                                    layer.closeAll()
+                                    tb.reload()
+                                } else {
+                                    layer.msg(msg.msg, {icon: 2, time: 2000, title: '失败'}) //返回数据失败时弹框
+                                }
                             }
                         }
                     )
